@@ -1,0 +1,61 @@
+@import "tailwindcss"; 
+:root{
+    --primary_color:#11175D;
+    --secondary_color:#5F35F5;
+    --primary_text_color:#000000;
+    --secondary_text_color:#4D4D4D;
+    --different_color:#EA6C00;
+    --background_color:#FFFFFF;
+    --heading_font: "Nunito", serif;
+    --roboto_font:"Roboto", sans-serif;
+  
+  }
+  
+  
+  @theme{
+    --color-primary_color:var(--primary_color);
+    --color-secondary_color:var(--secondary_color);
+    --color-primary_text_color:var(--primary_text_color);
+    --color-secondary_text_color:var(--secondary_text_color);
+    --color-different_color:var(--different_color);
+    --color-background_color:var(--background_color);
+    --font-heading_font:var(--heading_font);
+    --font-roboto_font:var(--roboto_font);
+  }
+  
+  
+  .container{
+    max-width:1170px;
+    scroll-behavior: smooth;
+  }
+  @layer base{
+    *{
+      margin:0;
+      padding:0;
+      outline:0;
+      box-sizing:border-box;
+    }
+  
+  
+    a{
+      text-decoration:none;
+      
+    }
+    li,ul,ol{
+      list-style:none;
+    }
+  
+    img{
+      vertical-align: middle;
+    }
+  
+    /*  ================== Registration ================= */
+   
+    /*  ================== Registration ================= */
+    
+    
+  
+  }
+  
+  
+  
