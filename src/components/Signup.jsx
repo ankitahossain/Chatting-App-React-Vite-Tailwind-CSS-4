@@ -8,6 +8,7 @@ import Button from './Button';
 import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification  } from "firebase/auth";
 import { toast , Bounce } from 'react-toastify';
 import {HashLoader} from "react-spinners";
+import { Link } from 'react-router';
 
 const Registration = () => {
   const auth = getAuth();
@@ -19,6 +20,7 @@ const Registration = () => {
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  
 
   const handleEye = () => {
     setEye(!eye);
@@ -148,7 +150,7 @@ const Registration = () => {
             )}
 
             <p className="font-medium text-[16.4px] mt-4">
-              Already have an account? <span className="text-different_color">Sign In</span>
+              Already have an account? <Link to ={"/signin"} className="text-different_color hover:text-blue-500 hover:underline cursor-pointer">Sign In</Link>
             </p>
           </form>
         </div>
