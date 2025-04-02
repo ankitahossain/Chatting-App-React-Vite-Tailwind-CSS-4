@@ -53,8 +53,27 @@
    
     /*  ================== Registration ================= */
     
-    
-  
+    .active{
+      background-color: red;
+      width: 90%;
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+      border-bottom-left-radius: 20px;
+      border-top-left-radius:20px;
+      position: relative;
+    }
+  .active::after{
+    position: absolute;
+    content: " ";
+    right: -7px ;
+    top: 0;
+    background-color: yellow;
+    height: 100%;
+    width: 20px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius:10px;
+  }
   }
   
   

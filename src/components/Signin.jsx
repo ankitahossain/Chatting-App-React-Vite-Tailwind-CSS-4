@@ -111,7 +111,7 @@ const Signin = () => {
         <Lottie animationData={SigninAnimation} />
       </div>
     </div>
-  );
+  ); 
 };
 
 export default Signin;
