@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Lottie from 'lottie-react';
 import SigninAnimation from '../assets/Animation.json';
-import Button from './Button';
+import Button from '../components/Button'
 import { Link } from 'react-router';
 import { FcGoogle } from "react-icons/fc";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";

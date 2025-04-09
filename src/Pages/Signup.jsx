@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Lottie from 'lottie-react';
-import Heading from "./Heading";
+import Heading from "../components/Heading";
 import chatAnimation from "../assets/chatAnimation.json";
 import { signupInputData } from '../lib/Signup';
 import { FaEye } from 'react-icons/fa';
-import Button from './Button';
-import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification  } from "firebase/auth";
-import { toast , Bounce } from 'react-toastify';
-import {HashLoader} from "react-spinners";
+import Button from '../components/Button';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import { toast, Bounce } from 'react-toastify';
+import { HashLoader } from "react-spinners";
 import { Link } from 'react-router';
 
 const Registration = () => {
@@ -20,7 +20,7 @@ const Registration = () => {
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  
+
 
   const handleEye = () => {
     setEye(!eye);
@@ -150,7 +150,7 @@ const Registration = () => {
             )}
 
             <p className="font-medium text-[16.4px] mt-4">
-              Already have an account? <Link to ={"/signin"} className="text-different_color hover:text-blue-500 hover:underline cursor-pointer">Sign In</Link>
+              Already have an account? <Link to={"/signin"} className="text-different_color hover:text-blue-500 hover:underline cursor-pointer">Sign In</Link>
             </p>
           </form>
         </div>
