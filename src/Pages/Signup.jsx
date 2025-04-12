@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Lottie from 'lottie-react';
 import Heading from "../components/Heading";
 import chatAnimation from "../assets/chatAnimation.json";
@@ -9,9 +9,13 @@ import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerifi
 import { toast, Bounce } from 'react-toastify';
 import { HashLoader } from "react-spinners";
 import { Link } from 'react-router';
+import { getDatabase, push, ref, set } from "firebase/database";
+import { useNavigate } from 'react-router';
 
 const Registration = () => {
   const auth = getAuth();
+  const db = getDatabase();
+   const Navigate = useNavigate()
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,7 +66,21 @@ const Registration = () => {
             transition: Bounce,
           });
         })
-        .then(() => sendEmailVerification(auth.currentUser))
+        .then(() => {
+          sendEmailVerification(auth.currentUser)
+        })
+        .then(() => {
+          let userRef = push(ref(db, 'users/'))
+
+          set(userRef, {
+            username: auth.currentUser.displayName || username,
+            email: auth.currentUser.email || email,
+            profile_picture: `https://images.pexels.com/photos/1129413/pexels-photo-1129413.jpeg?auto=compress&cs=tinysrgb&w=600`,
+            userUid: auth.currentUser.uid
+          })
+
+    })
+
         .then(() => {
           toast.info(`🦄 Verification mail sent to your email!`, {
             position: "bottom-right",
@@ -74,6 +92,7 @@ const Registration = () => {
             theme: "colored",
             transition: Bounce,
           });
+          Navigate('/signin')
         })
         .catch((err) => {
           console.log(`Error: ${err.code}`);

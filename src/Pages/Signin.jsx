@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import Lottie from 'lottie-react';
 import SigninAnimation from '../assets/Animation.json';
 import Button from '../components/Button'
-import { Link } from 'react-router';
+import { Link, Navigate } from 'react-router';
 import { FcGoogle } from "react-icons/fc";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set,push } from "firebase/database";
 import { toast, Bounce } from 'react-toastify';
+import { useNavigate } from 'react-router';
 
 const Signin = () => {
   const auth = getAuth();
   const db = getDatabase();
+  const navigate = useNavigate()
   const [loginInfo, setloginInfo] = useState({ email: '', password: '' });
   const [loginInfoError, setloginInfoError] = useState({ emailerr: '', passworderr: '' });
 
@@ -31,6 +33,7 @@ const Signin = () => {
 
       signInWithEmailAndPassword(auth, email, password)
         .then((userInfo) => {
+          navigate("/home")
           toast.success(`🚀 Login Successful!`, {
             position: "top-right",
             autoClose: 6000,
@@ -41,6 +44,7 @@ const Signin = () => {
             theme: "light",
             transition: Bounce,
           });
+
         })
         .catch((err) => {
           console.log(`Error: ${err}`);
@@ -49,14 +53,24 @@ const Signin = () => {
   };
 
   const loginwithGoogle = () => {
+    // alert(" hi")
+
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((userInfo) => {
-        set(ref(db, 'users'), {
-          username: "Ankita",
-          email: "ankita@gmail.com",
-          profile_picture: "imgURL",
-        });
+
+        console.log(userInfo)
+        const {user}=userInfo
+        let userRef = push(ref(db, 'users/'))
+
+        set(userRef, {
+          username: auth.currentUser.displayName || username,
+          email: auth.currentUser.email || email,
+          profile_picture: `https://images.pexels.com/photos/1129413/pexels-photo-1129413.jpeg?auto=compress&cs=tinysrgb&w=600`,
+          userUid: auth.currentUser.uid
+        })
+      }).then(()=>{
+        navigate('/home')
       })
       .catch((err) => {
         console.log(`Error: ${err}`);
@@ -70,7 +84,7 @@ const Signin = () => {
           <p className="font-bold font-roboto leading-[28px] text-[30px] text-black pt-4 mb-4">
             Login to your account!
           </p>
-          <div className='flex items-center mt-4 border-2 border-gray-400 rounded cursor-pointer text-lg mb-9'>
+          <div className='flex items-center mt-4 border-2 border-gray-400 rounded cursor-pointer text-lg mb-9' onClick={loginwithGoogle} >
             <FcGoogle className="h-[50px] w-[50px] ml-6" />
             <span className='text-black ml-2 font-roboto font-semibold text-[16.4px] py-6 mr-7'>
               Login with Google
@@ -111,7 +125,7 @@ const Signin = () => {
         <Lottie animationData={SigninAnimation} />
       </div>
     </div>
-  ); 
+  );
 };
 
 export default Signin;

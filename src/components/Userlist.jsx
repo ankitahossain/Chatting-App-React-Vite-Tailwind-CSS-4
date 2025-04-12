@@ -1,7 +1,64 @@
-import React from 'react'
+import React from "react";
+import { HiDotsVertical } from "react-icons/hi";
 import Button from '../components/Button'
-import { FaEllipsisVertical } from "react-icons/fa6";
-const Userlist = () => {
+import { FaPlus } from "react-icons/fa6";
+import { useState, useEffect } from "react";
+import UserlistSkeleton from '../components/UserlistSkleleton'
+import { getDatabase, ref, onValue } from "firebase/database";
+import { getAuth } from "firebase/auth";
+
+const UserList = () => {
+  const db = getDatabase();
+  const auth = getAuth();
+  const [loading, setLoading] = useState(true);
+  const [userlist, setUserlist] = useState([]); // Changed to empty array
+
+  useEffect(() => {
+    const auth = getAuth();
+    const fetchData = () => {
+      const UserRef = ref(db, "users/");//database network establish
+      onValue(UserRef, (snapshot) => {
+        const users = [];
+        snapshot.forEach((item) => {
+          // Skip the current user and only include others
+          if (item.val().userUid !== auth.currentUser?.uid) {
+            users.push({
+              id: item.key,
+              username: item.val().username || item.val().displayName || "User",
+              profile_picture: item.val().photoURL || item.val().profile_picture || "https://via.placeholder.com/150",
+              time: "Recently active" // Default value, replace with actual last active time if available
+            });
+          }
+        });
+        setUserlist(users);
+        setLoading(false);
+      }, (error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+    };
+    fetchData();
+
+    //todo: clean up function => server cost komanor jonno(ekta jsx onno jsx er sath kono karone connect thakle amra onno page e thakleo network rquest pathai tokhon sever cost bere jai)
+
+    return ()=>{
+
+      const UserRef = ref(db, "users/"); 
+
+      // off(UserRef)
+    }
+
+
+  }, [db]);
+
+  if (loading) {
+    return <UserlistSkeleton />;
+  }
+  console.log(auth.currentUser);
+
+  console.log("====================");
+  console.log(userlist);
+
   const groups = [
     {
       id: 1,
@@ -61,7 +118,7 @@ const Userlist = () => {
     },
     {
       id: 8,
-      name: "John Henry",
+      name: "Abu Sayeed",
       text: "Nature",
       time: "Yesterday, 2:00pm",
       group_img:
@@ -69,7 +126,7 @@ const Userlist = () => {
     },
     {
       id: 9,
-      name: "Robert Patinson",
+      name: "Saimun Hasan",
       text: "Coding",
       time: "Today, 3:40pm",
       group_img:
@@ -77,54 +134,63 @@ const Userlist = () => {
     },
     {
       id: 10,
-      name: "Jacob Cruise",
-      text: "Hello...",
+      name: "Nur The Dev",
+      text: "Apu Bishwas",
       time: "Today, 1:44pm",
       group_img:
         "https://images.pexels.com/photos/842811/pexels-photo-842811.jpeg?auto=compress&cs=tinysrgb&w=600",
     },
   ];
+
   return (
     <div>
-      <div className='bg-white w-[25dvw] h-[48dvh] flex flex-col rounded-xl border-gray-200 shadow-xl overflow-hidden '>
-        <div className='flex'>
-          <p className='ml-6 mt-2 font-semibold '>User List</p>
-          <span className='mt-3 ml-60 text-secondary_color font-bold text-[22px]' ><FaEllipsisVertical /></span>
-
+      <div className="w-[25dvw] h-[43dvh] rounded-xl border-2 border-gray-200 shadow-xl overflow-hidden">
+        <div className="flex py-2">
+          <p className="ml-6 mt-4 font-roboto_font font-bold text-[18px]">
+            User List({userlist.length})
+          </p>
+          <span className="ml-auto mt-4 text-secondary_color">
+            <HiDotsVertical size={22} />
+          </span>
         </div>
-        {/* groups */}
-        <div className='w-full h-full scrollbar'>
-          {groups?.map((item) => (
 
-
-            <div className='item.id === groups.length?(flex  justify-around pb-3 mt-2 cursor-pointer):(flex justify-around pb-2 mt-2 border-b-2 border-gray-300 cursor-pointer)' key={item.id}>
-              <div className='flex'>
-                <div className='w-[50px] h-[50px] rounded-full'>
-                  <picture>
-                    <img src={item.group_img} alt="img" className='w-full h-full object-cover rounded-full ml-6 mt-2 ' />
-                  </picture>
-
-                </div>
-                <div>
-                  <p className='font-roboto_font font-semibold mr-7 ml-14 mt-3'>{item.name}</p>
-                  <p className='font-roboto_font font-normal text-[13px] text-gray-500 mr-7 ml-14 mt-1'>{item.text}</p>
-
-                </div>
-                <Button design="px-8 py-1 bg-secondary_color text-white rounded mt-4 cursor-pointer text-lg ml-18" content="Join" />
+        <div className="w-full h-full overflow-y-auto">
+          {userlist.map((item, index) => (
+            <div
+              className={
+                index === userlist.length - 1
+                  ? `flex justify-around pb-12 mt-2 cursor-pointer`
+                  : `flex justify-around border-b-2 border-gray-300 pb-2 mt-2 cursor-pointer`
+              }
+              key={item.userUid}
+            >
+              <div className="w-[50px] h-[50px] rounded-full">
+                <picture>
+                  <img
+                    src={item.profile_picture}
+                    alt="user profile"
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                </picture>
               </div>
-
+              <div>
+                <p className="font-roboto_font mr-7 font-semibold">
+                  {item.username}
+                </p>
+                <p className="font-roboto_font font-normal text-[13px] text-gray-300">
+                  {item.time}
+                </p>
+              </div>
+              <Button
+                design="px-4 py-1 bg-secondary_color text-white font-bold text-[22px] font-roboto_font rounded-md cursor-pointer"
+                content={<FaPlus />}
+              />
             </div>
-
-
           ))}
         </div>
-        {/* groups */}
       </div>
-
-
     </div>
+  );
+};
 
-  )
-}
-
-export default Userlist
+export default UserList;
